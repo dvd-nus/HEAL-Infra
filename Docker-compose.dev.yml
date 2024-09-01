@@ -1,0 +1,61 @@
+version: '3.4'
+
+# Change these based on your structure
+x-contexts:
+  - &FRONTEND_PATH "../Frontend"
+  - &BACKEND_PATH "../Backend"
+
+# Change these based on your structure
+x-volumes:
+  - &BACKEND_VOLUMES
+    - "../Backend/src/:/hms/src/:ro"
+  - &FRONTEND_VOLUMES
+    - "../Frontend/src/:/hms/src:ro"
+    - "../Frontend/public/:/hms/public:ro"
+  - &DB_DATA_VOLUMES
+    - "~/pgdata_hms:/var/lib/postgresql/data:z"
+
+x-db-environment: &DB_ENVIRONMENT
+  POSTGRES_USER: admin
+  POSTGRES_PASSWORD: admin
+  POSTGRES_DB: hms
+
+services:
+  web:
+    build:
+      context: *FRONTEND_PATH
+      dockerfile: "Dockerfile.dev"
+    ports:
+      - "5173:5173"
+    volumes: *FRONTEND_VOLUMES
+    links:
+      - api:api_host
+
+  api:
+    build:
+      context: *BACKEND_PATH
+      dockerfile: "Dockerfile.dev"
+    ports:
+      - "8080:8080"
+    volumes: *BACKEND_VOLUMES
+    environment:
+      <<: *DB_ENVIRONMENT
+    links:
+      - redis:redis_host
+      - db:db_host
+
+  db:
+    image: postgres:15-bookworm
+    restart: always
+    ports:
+      - 5432:5432
+    volumes: *DB_DATA_VOLUMES
+    environment:
+      <<: *DB_ENVIRONMENT
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379

@@ -1,0 +1,17 @@
+{
+  "name": "load-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "register_login.js",
+  "scripts": {
+    "build": "esbuild register_login.js --bundle --external:k6 --platform=node --outfile=dist/out.js",
+    "test": "npm run build && export K6_CLOUD_TOKEN=$K6_API_TOKEN && k6 run -o cloud dist/out.js",
+    "test_local": "npm run build && k6 run dist/out.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^8.2.0",
+    "esbuild": "0.19.5"
+  }
+}

@@ -1,0 +1,5 @@
+node_modules
+dist
+K6_CLOUD_TOKEN
+summary.html
+summary-*.html

@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {},
+  "extensions": {
+    "recommendations": [
+      "ms-azuretools.vscode-docker",
+      "hashicorp.terraform",
+      "redhat.vscode-xml",
+      "github.vscode-github-actions"
+    ]
+  }
+}
